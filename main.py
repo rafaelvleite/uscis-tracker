@@ -2,9 +2,8 @@ import requests
 import json
 import os
 from mailjet_rest import Client
-from dotenv import load_dotenv
-
-load_dotenv()
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv(), override=True)
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
@@ -16,6 +15,14 @@ HISTORY_DIR = "case_status_history"
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
 mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_SECRET_KEY), version='v3.1')
+
+def load_receipt_numbers_from_file(path):
+    try:
+        with open(path, "r") as f:
+            return [line.strip().upper() for line in f if line.strip()]
+    except Exception as e:
+        print(f"❌ Error reading receipt file: {e}")
+        return []
 
 def get_access_token(client_id, client_secret):
     url = "https://api-int.uscis.gov/oauth/accesstoken"
@@ -56,13 +63,13 @@ def send_status_change_email(receipt_number, old_status, new_status, description
         'Messages': [
             {
                 "From": {
-                    "Email": "no-reply@yourdomain.com",
-                    "Name": "USCIS Tracker"
+                    "Email": os.getenv("EMAIL_FROM"),
+                    "Name": os.getenv("EMAIL_FROM_NAME")
                 },
                 "To": [
                     {
-                        "Email": "you@example.com",
-                        "Name": "You"
+                        "Email": os.getenv("EMAIL_TO"),
+                        "Name": os.getenv("EMAIL_TO_NAME")
                     }
                 ],
                 "Subject": f"📬 USCIS Case Status Changed for {receipt_number}",
@@ -77,7 +84,8 @@ def send_status_change_email(receipt_number, old_status, new_status, description
         print("❌ Failed to send email:", result.status_code, result.text)
 
 def main():
-    receipt_numbers = ["EAC9999103403", "EAC9999103404", "EAC9999103405", "EAC9999103410"]
+    receipt_file = os.getenv("RECEIPT_LIST", "receipts.txt")
+    receipt_numbers = load_receipt_numbers_from_file(receipt_file)
 
     print("🔐 Getting access token...")
     token = get_access_token(CLIENT_ID, CLIENT_SECRET)
