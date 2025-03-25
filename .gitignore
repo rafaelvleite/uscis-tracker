@@ -1,3 +1,4 @@
 .env
 .venv/
-*.txt
+receipts.txt
+case_status_history/
