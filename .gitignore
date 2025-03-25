@@ -1,4 +1,5 @@
 .env
 .venv/
 receipts.txt
+receipts_production.txt
 case_status_history/
