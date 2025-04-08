@@ -3,6 +3,7 @@ import json
 import os
 from mailjet_rest import Client
 from dotenv import load_dotenv, find_dotenv
+import time
 load_dotenv(find_dotenv(), override=True)
 
 CLIENT_ID = os.getenv("CLIENT_ID")
@@ -27,7 +28,8 @@ def load_receipt_numbers_from_file(path):
 def get_access_token(client_id, client_secret):
     url = "https://api-int.uscis.gov/oauth/accesstoken"
     headers = {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "demo_id": "2852"  # Add demo_id to access token request (if needed)
     }
     data = {
         "grant_type": "client_credentials",
@@ -41,7 +43,8 @@ def get_access_token(client_id, client_secret):
 def check_case_status(receipt_number, access_token):
     url = f"https://api-int.uscis.gov/case-status/{receipt_number}"
     headers = {
-        "Authorization": f"Bearer {access_token}"
+        "Authorization": f"Bearer {access_token}",
+        "demo_id": "2852"  # Add the required demo_id header
     }
     response = requests.get(url, headers=headers)
     return response.json() if response.status_code == 200 else None
@@ -94,6 +97,7 @@ def main():
         return
 
     for receipt_number in receipt_numbers:
+        time.sleep(0.5)
         print(f"\n🔎 Checking status for {receipt_number}...")
         result = check_case_status(receipt_number, token)
         if not result or "case_status" not in result:
