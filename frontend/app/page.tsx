@@ -38,9 +38,10 @@ export default function Home() {
               Track the status of your USCIS cases in one place. Get notified when there are updates.
             </p>
           </div>
-          <div className="w-full max-w-4xl mx-auto">
+          {/*<div className="w-full max-w-4xl mx-auto">
             <CaseTracker />
           </div>
+          */}
         </section>
       </main>
       <footer className="border-t py-6">
