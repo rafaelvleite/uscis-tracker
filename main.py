@@ -6,13 +6,16 @@ from dotenv import load_dotenv, find_dotenv
 import time
 load_dotenv(find_dotenv(), override=True)
 
+# Get absolute path to the current script directory
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 MAILJET_API_KEY = os.getenv("MJ_APIKEY_PUBLIC")
 MAILJET_SECRET_KEY = os.getenv("MJ_APIKEY_PRIVATE")
 
 # Folder to store previous results
-HISTORY_DIR = "case_status_history"
+HISTORY_DIR = os.path.join(SCRIPT_DIR, "case_status_history")
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
 mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_SECRET_KEY), version='v3.1')
@@ -85,7 +88,7 @@ def send_status_change_email(receipt_number, old_status, new_status, description
         print("❌ Failed to send email:", result.status_code, result.text)
 
 def main():
-    receipt_file = os.getenv("RECEIPT_LIST", "receipts.txt")
+    receipt_file = os.getenv("RECEIPT_LIST", os.path.join(SCRIPT_DIR, "receipts.txt"))
     receipt_numbers = load_receipt_numbers_from_file(receipt_file)
 
     print("🔐 Getting access token...")
