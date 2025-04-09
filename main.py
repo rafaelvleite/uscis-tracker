@@ -88,8 +88,8 @@ def send_status_change_email(receipt_number, old_status, new_status, description
         print("❌ Failed to send email:", result.status_code, result.text)
 
 def main():
-    print(f"📄 Loading receipt numbers from: {receipt_file}")
     receipt_file = os.getenv("RECEIPT_LIST", os.path.join(SCRIPT_DIR, "receipts.txt"))
+    print(f"📄 Loading receipt numbers from: {receipt_file}")
     receipt_numbers = load_receipt_numbers_from_file(receipt_file)
 
     print("🔐 Getting access token...")
