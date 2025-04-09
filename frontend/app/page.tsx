@@ -42,6 +42,22 @@ export default function Home() {
             <CaseTracker />
           </div>
           */}
+          <div className="w-full max-w-4xl mx-auto p-4">
+            <h2 className="text-2xl font-semibold mb-4">Application Description</h2>
+            <p className="mb-2">
+              <strong>USCIS Tracker</strong> is a personal-use automation script developed in Python. It is designed to monitor the status of USCIS immigration cases using the official Case Status API.
+            </p>
+            <p className="mb-2">
+              The application reads a list of USCIS receipt numbers from a private file. On each run, it authenticates via OAuth 2.0 and checks each receipt's current status. Results are compared to previously saved statuses to detect any changes. If a change is found, the application automatically sends an email notification to my personal email address using Mailjet.
+            </p>
+            <p className="mb-4">
+              The application is used exclusively by me to track my own and my immediate family’s cases. It does not collect, store, or share any personal data beyond what is necessary to check case statuses. Configuration is securely managed using environment variables.
+            </p>
+            <div className="pt-4 border-t mt-4">
+              <p className="text-sm text-gray-600">Contact: Rafael Leite — <a href="mailto:rafaelvleite@icloud.com" className="text-blue-600 hover:underline">rafaelvleite@icloud.com</a></p>
+            </div>
+          </div>
+
         </section>
       </main>
       <footer className="border-t py-6">
